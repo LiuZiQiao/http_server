@@ -83,6 +83,39 @@ int main(int argc, char* argv[])
 
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 
+<<<<<<< HEAD
+=======
+  //evconnlistener其实是对even_base和event的封装而已。
+  
+  /*
+   *一系列的工作函数，因为listener可以用于不同的协议。
+   struct eventlistener_ops{
+     int (*enable)(stuct evconnlistener*);
+     int (*disable)(stuct evconnlistener*);
+     void (*destroy)(struct evconnlistener*);
+     void (*shutdown)(stuct evconnlistener*);
+     evutil_socket_t (*getfd)(struct evconnlistener*);
+     stuct event_base *(*getbase)(sturct evconnlistener*);
+   };
+
+   struct evconnlistener{
+     const struct evconnlistener_ops *ops;  //操作函数
+     void *lock;                            //锁变量，用于线程安全
+     evconnlistener_cb cb;                  //用户的回调函数
+     evconnlistener_errorcb errorcv;        //发生错误时的回调函数
+     void *user_data;                       //回调函数的参数。当回调函数执行的时候，通过形参传入回调函数内部
+     unsigned flags;                        //属性标志；例如socket套接字属性，可以是阻塞，非阻塞，reuse等。
+     short refcnt;                          //引用计数
+     unsigned enabled :1;                   //位域为1，即只需一个比特位来存储这个成员
+   };
+
+   struct evconlistener_event{
+      struct evconnlistener base;
+      stuct event listener;    //内部event插入到event_base,完成监听
+   };
+   */
+
+>>>>>>> temp
 	evconnlistener* listener = evconnlistener_new_bind(base, accept_conn_cb,
 		   	0, LEV_OPT_CLOSE_ON_FREE | LEV_OPT_REUSEABLE /*| LEV_OPT_THREADSAFE*/, 
 			-1, (sockaddr*)&sin, sizeof(sin));
@@ -96,9 +129,17 @@ int main(int argc, char* argv[])
 	evconnlistener_set_error_cb(listener, accept_error_cb);
 
 	DEBUG_LOG("listening");
+<<<<<<< HEAD
 	event_base_dispatch(base);
 
 	evconnlistener_free(listener);
+=======
+  //循环监听红黑树base
+	event_base_dispatch(base);
+  //释放监听
+	evconnlistener_free(listener);
+  //释放事件指针
+>>>>>>> temp
 	event_base_free(base);
 	return 0;
 }
